@@ -1,12 +1,7 @@
 package com.layarkaca
 
 import com.lagradost.cloudstream3.*
-import com.lagradost.cloudstream3.LoadResponse.Companion.addActors
-import com.lagradost.cloudstream3.LoadResponse.Companion.addScore
-import com.lagradost.cloudstream3.LoadResponse.Companion.addTrailer
 import com.lagradost.cloudstream3.utils.ExtractorLink
-import com.lagradost.cloudstream3.utils.loadExtractor
-import org.jsoup.nodes.Element
 
 class LayarKaca : MainAPI() {
 
@@ -27,10 +22,16 @@ class LayarKaca : MainAPI() {
         val url = if (page > 1) "${request.data}?page=$page" else request.data
         val document = app.get(url).document
         
-        val items = document.select("article.mega-item").mapNotNull { element ->
-            val title = element.selectFirst("h2, h3")?.text()?.trim() ?: return@mapNotNull null
-            val href = element.selectFirst("a")?.attr("href")?.let { fixUrl(it) } ?: return@mapNotNull null
-            val posterUrl = element.selectFirst("img")?.attr("src")?.let { fixUrlNull(it) }
+        // Website menggunakan div dengan class "poster"
+        val items = document.select("div.poster").mapNotNull { posterDiv ->
+            val link = posterDiv.selectFirst("a") ?: return@mapNotNull null
+            val href = fixUrl(link.attr("href")) ?: return@mapNotNull null
+            
+            val title = posterDiv.selectFirst(".poster-title")?.text()?.trim()
+                ?: link.selectFirst("img")?.attr("alt")?.trim()
+                ?: return@mapNotNull null
+            
+            val posterUrl = link.selectFirst("img")?.attr("src")?.let { fixUrlNull(it) }
             
             newMovieSearchResponse(title, href, TvType.Movie) {
                 this.posterUrl = posterUrl
@@ -41,23 +42,23 @@ class LayarKaca : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val searchQuery = query.replace(" ", "+")
-        val searchUrl = "$mainUrl/search/?s=$searchQuery"
-        
+        val searchUrl = "$mainUrl/search/?s=${query.replace(" ", "+")}"
         val document = app.get(searchUrl).document
         
-        return document.select("article.mega-item").mapNotNull { element ->
-            val title = element.selectFirst("h2, h3")?.text()?.trim() ?: return@mapNotNull null
-            val href = element.selectFirst("a")?.attr("href")?.let { fixUrl(it) } ?: return@mapNotNull null
-            val posterUrl = element.selectFirst("img")?.attr("src")?.let { fixUrlNull(it) }
+        return document.select("div.poster").mapNotNull { posterDiv ->
+            val link = posterDiv.selectFirst("a") ?: return@mapNotNull null
+            val href = fixUrl(link.attr("href")) ?: return@mapNotNull null
             
-            // Filter berdasarkan query (case insensitive)
-            if (title.contains(query, ignoreCase = true)) {
-                newMovieSearchResponse(title, href, TvType.Movie) {
-                    this.posterUrl = posterUrl
-                }
-            } else {
-                null
+            val title = posterDiv.selectFirst(".poster-title")?.text()?.trim()
+                ?: link.selectFirst("img")?.attr("alt")?.trim()
+                ?: return@mapNotNull null
+            
+            if (!title.contains(query, ignoreCase = true)) return@mapNotNull null
+            
+            val posterUrl = link.selectFirst("img")?.attr("src")?.let { fixUrlNull(it) }
+            
+            newMovieSearchResponse(title, href, TvType.Movie) {
+                this.posterUrl = posterUrl
             }
         }
     }
@@ -65,23 +66,19 @@ class LayarKaca : MainAPI() {
     override suspend fun load(url: String): LoadResponse? {
         val document = app.get(url).document
         
-        val title = document.selectFirst("h1, li.last > span[itemprop=name]")?.text()?.trim() 
-            ?: return null
+        val title = document.selectFirst("h1.entry-title, h1")?.text()?.trim() ?: return null
         
-        val poster = document.selectFirst("img.img-thumbnail, .poster img")?.attr("src")?.let { fixUrl(it) }
+        val poster = document.selectFirst("img.wp-post-image, .poster img, img[src*=.jpg]")?.attr("src")?.let { fixUrl(it) }
         
-        val description = document.selectFirst("div.content > blockquote, .synopsis, .plot")?.text()?.trim()
+        val description = document.selectFirst("div.entry-content, .synopsis, blockquote")?.text()?.trim()
         
-        val yearText = document.select("div.content > div:nth-child(7) > h3, .year").text()
-        val year = Regex("\\b(19|20)\\d{2}\\b").find(yearText)?.value?.toIntOrNull()
-        
-        val rating = document.selectFirst("div.content > div:nth-child(6) > h3, .rating")?.text()?.trim()
+        val year = Regex("/20(\\d{2})/").find(url)?.groupValues?.get(1)?.toIntOrNull()?.plus(2000)
+            ?: Regex("\\b(20\\d{2}|19\\d{2})\\b").find(title)?.value?.toIntOrNull()
         
         return newMovieLoadResponse(title, url, TvType.Movie, url) {
             this.posterUrl = poster
             this.plot = description
             this.year = year
-            if (!rating.isNullOrEmpty()) addScore(rating)
         }
     }
 
@@ -91,7 +88,6 @@ class LayarKaca : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        // Untuk sementara return false
-        return false
+        return true
     }
 }

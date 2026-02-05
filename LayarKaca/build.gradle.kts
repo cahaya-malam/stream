@@ -1,29 +1,14 @@
-// use an integer for version numbers
-version = 23
-
+version = 7
 
 cloudstream {
     language = "id"
-    // All of these properties are optional, you can safely remove them
-
-    // description = "Lorem Ipsum"
-    authors = listOf("Hexated", "cahaya-malam")
-
-    /**
-     * Status int as the following:
-     * 0: Down
-     * 1: Ok
-     * 2: Slow
-     * 3: Beta only
-     * */
-    status = 1 // will be 3 if unspecified
+	description = "LayarKaca nonton movie streaming subtitle indonesia"
+    authors = listOf("Hexated", "cahaya-malam", "Asm0d3usX")
+	isCrossPlatform = true
+    status = 1
     tvTypes = listOf(
         "AsianDrama",
         "TvSeries",
-        "Movie",
+        "Movie"
     )
-
-
-    iconUrl = "https://www.google.com/s2/favicons?domain=amp.lk21official.mom&sz=%size%"
-
 }

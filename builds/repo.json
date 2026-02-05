@@ -1,8 +1,0 @@
-{
-    "name": "stream Repo",
-    "description": "Cloudstream Repo",
-    "manifestVersion": 1,
-    "pluginLists": [
-      "https://raw.githubusercontent.com/cahaya-malam/stream/refs/heads/main/builds/plugins.json"
-    ]
-}

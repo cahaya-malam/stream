@@ -1,0 +1,65 @@
+[
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=www.dubbindo.site&sz=256",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/cahaya-malam/stream",
+        "status": 1,
+        "language": "id",
+        "authors": [
+            "Hexated",
+            "TeKuma25"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Cartoon",
+            "Anime"
+        ],
+        "version": 2,
+        "internalName": "Dubbindo",
+        "url": "https://raw.githubusercontent.com/cahaya-malam/stream/builds/Dubbindo.cs3",
+        "name": "Dubbindo"
+    },
+    {
+        "jarFileSize": 90847,
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/cahaya-malam/stream",
+        "status": 1,
+        "language": "id",
+        "authors": [
+            "Hexated",
+            "cahaya-malam",
+            "Asm0d3usX"
+        ],
+        "tvTypes": [
+            "AsianDrama",
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 7,
+        "internalName": "LayarKaca",
+        "jarUrl": "https://raw.githubusercontent.com/cahaya-malam/stream/builds/LayarKaca.jar",
+        "description": "LayarKaca nonton movie streaming subtitle indonesia",
+        "url": "https://raw.githubusercontent.com/cahaya-malam/stream/builds/LayarKaca.cs3",
+        "name": "LayarKaca"
+    },
+    {
+        "iconUrl": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://ww03.pencurimovie.bond&size=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/cahaya-malam/stream",
+        "status": 1,
+        "language": "id",
+        "authors": [
+            "Phisher98"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 3,
+        "internalName": "Pencurimovie",
+        "description": "Pencurimovie ",
+        "url": "https://raw.githubusercontent.com/cahaya-malam/stream/builds/Pencurimovie.cs3",
+        "name": "Pencurimovie"
+    }
+]

@@ -21,9 +21,10 @@
         "name": "Dubbindo"
     },
     {
-        "jarFileSize": 90847,
+        "jarFileSize": 91029,
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/cahaya-malam/stream",
+        "fileSize": 19009,
         "status": 1,
         "language": "id",
         "authors": [
